@@ -1,0 +1,138 @@
+/* OUERGHUI Mortadha : Embedded Systems Engineer */
+/* was Written in 07/01/2020 at 10:37 pm */
+/* This is a C++ example of Student arrangement in a binary file */ 
+
+
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <windows.h>
+
+using namespace std;
+
+/* This is the main Student class to save all students data */
+ 
+class Student {
+private:
+
+    int roll_no;
+    string name;
+    int marks;
+    string grade;
+
+public:
+/* student number getter */
+    int Getroll_no() {
+        return roll_no;
+    }
+/*student number setter */
+    void Setroll_no(int IntermidiateVal) {
+        roll_no = IntermidiateVal;
+    }
+/* student mark getter */
+    int Getmarks() {
+        return marks;
+    }
+/* student mark setter */
+    void Setmarks(int IntermidiateVal) {
+        marks = IntermidiateVal;
+    }
+/* student name getter */
+    string Getname() {
+        return name;
+    }
+/* student name setter */
+    void Setname(string IntermidiateVal) {
+        name = IntermidiateVal;
+    }
+/*student details entry */
+    void Accept_details(std::ofstream &file) {
+        int rn;
+        string nom;
+        int mk;
+        string gd;
+        cout << "Please enter roll no!" << endl;
+        cin>> rn;
+        Setroll_no(rn);
+        file << Getroll_no();
+        file << "  ";
+        cout << "Please enter student name!" << endl;
+        cin>> nom;
+        Setname(nom);
+        file << Getname();
+        file << "  ";
+        cout << "Please enter his marks!" << endl;
+        cin>> mk;
+        Setmarks(mk);
+        file << Getmarks();
+        file << "  " <<endl;
+        if (mk<0 || mk>100)
+        {
+            printf("Wrong Entry");
+        }
+    }
+/* student data display */
+    bool Display_details() {
+         ifstream myFile("foobar.bin", ios::out | ios::binary);
+         string word;
+          if(!myFile) {
+              cout << "Cannot open file!" << endl;
+              return false;
+          }
+         while (myFile >> word)
+        {
+            // displaying content
+            cout << word << endl;
+            Sleep(1000);
+        }
+        return true;
+    }
+/* grade calculation method */
+    string Calculate_grade(std::ofstream& file) {
+        if (Getmarks() < 50)
+            grade = "Grade F";
+        else if ((Getmarks() >= 50) && (Getmarks() < 60))
+            grade = "Grade D";
+        else if (Getmarks() >=60 && Getmarks() < 70)
+            grade = "Grade C";
+        else if (Getmarks() >= 70 && Getmarks() < 80)
+            grade = "Grade B";
+        else if (Getmarks() >= 80 && Getmarks() < 90)
+            grade = "Grade A";
+        else
+            grade = "Grade A+";
+        file.write(grade.c_str(),sizeof(grade.c_str()));
+        return grade;
+    }
+};
+/* Main program */
+int main()
+{
+    Student s;
+    int choix;
+    std::ofstream myFile("foobar.bin", std::ios::binary);
+    while(1) {
+        system("cls");
+        cout << "Menu :" << endl;
+        cout << "***********************************" << endl;
+        cout << "1 .Enter new student information" << endl;
+        cout << "2 .Display student" << endl;
+        cout << "3 .Calculate grade" << endl;
+        cout << "4. Exit" << endl;
+        cout << "***********************************" << endl;
+        cin >> choix;
+        switch(choix ) {
+        case 1:
+            s.Accept_details(myFile);
+            break;
+        case 2:
+            s.Display_details();
+            break;
+        case 3:
+            s.Calculate_grade(myFile);
+        case 4:
+            return 0;
+        }
+    }
+}
